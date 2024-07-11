@@ -30,7 +30,7 @@ class EmailVerificationView(generics.GenericAPIView):
         if not email:
             return Response({"error": "Email is required"}, status=400)
 
-        if User.objects.filter(email=email).exists():
+        if CustomUser.objects.filter(email=email).exists():
             return Response({"error": "Email already exists"}, status=400)
         
         # 기존 인증 기록이 존재하면 삭제
@@ -38,7 +38,7 @@ class EmailVerificationView(generics.GenericAPIView):
             email_verification = EmailVerification.objects.get(email=email)
             
             # 이 토큰을 발행해서 인증을 하지 않았거나 인증을 했으나 계정을 만들지 않았을 경우 삭제
-            if not email_verification.is_verified or not User.objects.filter(email=email).exists():
+            if not email_verification.is_verified or not CustomUser.objects.filter(email=email).exists():
                 email_verification.delete()
             else:
                 return Response({"error": "Email already verified"}, status=400)
@@ -87,7 +87,7 @@ class PasswordResetRequestView(generics.GenericAPIView):
         if not email:
             return Response({"error": "Email is required"}, status=400)
         
-        if not User.objects.filter(email=email).exists():
+        if not CustomUser.objects.filter(email=email).exists():
             return Response({"error": "Email does not exist"}, status=400)
 
         # 기존 비밀번호 재설정 요청이 존재하면 비활성화
@@ -124,7 +124,7 @@ def reset_password(request, token):
     if not new_password:
         return Response({"error": "New password is required"}, status=400)
 
-    user = User.objects.get(email=password_reset_request.email)
+    user = CustomUser.objects.get(email=password_reset_request.email)
     user.set_password(new_password)
     user.save()
 
@@ -136,7 +136,7 @@ def reset_password(request, token):
 # 계정생성
 class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
     serializer_class = RegisterSerializer
 
     def get(self, request, *args, **kwargs):
@@ -145,7 +145,7 @@ class RegisterView(generics.CreateAPIView):
 # 계정삭제
 class DeleteUserView(generics.RetrieveDestroyAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
 
     def get_object(self):
@@ -195,6 +195,7 @@ def protected_function_view(request):
     print("accept")
     return Response({'message': 'This is a protected function view test'})
 
+# Write by KHJ
 
 
 # from django.core.mail.message import EmailMessage

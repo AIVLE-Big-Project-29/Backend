@@ -27,3 +27,5 @@ urlpatterns = [
     path('user_info/', user_info, name='user_info'),
     # path('send_email/', send_email, name='send_email'),
 ]
+
+# Write by KHJ

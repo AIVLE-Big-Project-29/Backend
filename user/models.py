@@ -2,11 +2,19 @@
 from django.db import models
 
 # Create your models here.
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 import uuid
 
 from datetime import timedelta
 from django.utils import timezone
+
+# 유저 모델
+class CustomUser(AbstractUser):
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+    affiliation = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.username
 
 # 이메일 인증
 class EmailVerification(models.Model):
@@ -42,3 +50,6 @@ class PasswordResetRequest(models.Model):
         if self.is_expired():
             self.is_active = False
             self.save()
+
+
+# Write by KHJ

@@ -1,11 +1,11 @@
 # serializers.py
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import EmailVerification
+from .models import *
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('username', 'password', 'email')
         extra_kwargs = {'password': {'write_only': True}}
 
@@ -21,7 +21,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         if not email_verification.is_verified or not email_verification.is_active: # 이미 인증되어 있거나 기간이 만료되었으면
             raise serializers.ValidationError("Email is not verified or the verification link has expired")
 
-        user = User.objects.create_user(
+        user = CustomUser.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password'],
             email=validated_data['email']
@@ -33,5 +33,8 @@ class RegisterSerializer(serializers.ModelSerializer):
     
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('id', 'username', 'email')
+
+
+# Write by KHJ

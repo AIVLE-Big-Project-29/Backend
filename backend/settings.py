@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import json
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -46,9 +47,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # add
+
+    # drf 사용
     'rest_framework',
     'rest_framework_simplejwt',
-    'user',
+
+    # 앱 등록
+    'user', # <- write by KHJ
+    'noticeboard',
+    'AI',
 
     # CORS
     'corsheaders',
@@ -143,13 +150,13 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ###### add
-AUTH_USER_MODEL = 'auth.User'
-
+# AUTH_USER_MODEL = 'auth.User'
+AUTH_USER_MODEL = 'user.CustomUser'
 
 # MEDIA File
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
@@ -235,3 +242,4 @@ EMAIL_HOST_PASSWORD = config.get('EMAIL_HOST_PASSWORD')
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 FRONTEND_URL = 'http://localhost:8000'  # 프론트엔드 URL을 설정합니다.
+
