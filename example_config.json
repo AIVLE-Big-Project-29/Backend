@@ -1,0 +1,5 @@
+{
+    "SECRET_KEY" : "너의 시크릿 키",
+    "EMAIL_HOST_USER" : "너의 이메일",
+    "EMAIL_HOST_PASSWORD" : "너의 이메일 비밀번호"
+}
