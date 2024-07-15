@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 
 
 class BoardViewSet(viewsets.ModelViewSet):
-    queryset = Board.object.all()
+    queryset = Board.objects.all()
     serializer_class = BoardSerializer
     permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
 
