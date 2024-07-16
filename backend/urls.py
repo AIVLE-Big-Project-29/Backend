@@ -23,8 +23,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user_api/', include('user.urls')),
-    path('notices/',include('noticeboard.urls')),
-    path('ai/',include('AI.urls'))
+    path('notices/', include('noticeboard.urls')),
+    path('AI/', include('AI.urls')),
+    path('generativeAI', include('generativeAI.urls'))
 ]
 
 # MEDIA 파일 서빙

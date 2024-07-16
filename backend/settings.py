@@ -245,10 +245,8 @@ EMAIL_HOST_PASSWORD = config.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 FRONTEND_URL = 'http://localhost:8000'  # 프론트엔드 URL을 설정합니다.
 
-import os
-
-# BASE_DIR은 프로젝트의 기본 디렉토리를 가리킵니다.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# # BASE_DIR은 프로젝트의 기본 디렉토리를 가리킵니다.
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # 모델 파일 경로 설정
 MODEL_PATH = os.path.join(BASE_DIR, 'AI', 'models')
