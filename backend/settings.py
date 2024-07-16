@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'user', # <- write by KHJ
     'noticeboard',
     'AI',
+    'generativeAI',
 
     # CORS
     'corsheaders',
@@ -234,7 +235,8 @@ CORS_ALLOW_HEADERS = [
 
 # 이메일 인증
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.naver.com'
+# EMAIL_HOST = 'smtp.naver.com' # 네이버 smtp
+EMAIL_HOST = 'smtp.gmail.com' # gmail smtp
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config.get('EMAIL_HOST_USER')
@@ -250,3 +252,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # 모델 파일 경로 설정
 MODEL_PATH = os.path.join(BASE_DIR, 'AI', 'models')
+
+# Stability API 키 설정
+STABILITY_API_KEY = os.getenv("STABILITY_API_KEY", config.get('STABILITY_API_KEY'))
