@@ -1,11 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 import base64
 import os
 import requests
 from django.conf import settings
+from .serializers import ImageUploadSerializer  # serializers.py에서 ImageUploadSerializer 임포트
 
 # 테스트 용
 from django.http import FileResponse
@@ -14,8 +15,7 @@ from io import BytesIO
 class ImageGenerateView(APIView):
     # permission_classes = [IsAuthenticated]
     permission_classes = [AllowAny]
-
-    parser_classes = [MultiPartParser, FormParser]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     def post(self, request, *args, **kwargs):
         # Stability API 설정
@@ -26,10 +26,12 @@ class ImageGenerateView(APIView):
         if api_key is None:
             return Response({"error": "Missing Stability API key."}, status=400)
 
-        # 업로드된 이미지 파일 가져오기
-        init_image = request.FILES.get("init_image")
-        if not init_image:
-            return Response({"error": "No image file uploaded."}, status=400)
+        # 직렬화기 사용하여 요청 데이터 검증
+        serializer = ImageUploadSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
+
+        init_image = serializer.validated_data["init_image"]
 
         # Stability API 호출
         try:
@@ -43,13 +45,13 @@ class ImageGenerateView(APIView):
                     "init_image": init_image.read()
                 },
                 data={
-                    "image_strength": request.data.get("image_strength", 0.50),
+                    "image_strength": serializer.validated_data["image_strength"],
                     "init_image_mode": "IMAGE_STRENGTH",
-                    "text_prompts[0][text]": request.data.get("text_prompts", "Default prompt"),
-                    "cfg_scale": request.data.get("cfg_scale", 7),
-                    "samples": request.data.get("samples", 1),
-                    "steps": request.data.get("steps", 30),
-                    "style_preset": request.data.get("style_preset", "photographic")
+                    "text_prompts[0][text]": serializer.validated_data["text_prompts"],
+                    "cfg_scale": serializer.validated_data["cfg_scale"],
+                    "samples": serializer.validated_data["samples"],
+                    "steps": serializer.validated_data["steps"],
+                    "style_preset": serializer.validated_data["style_preset"]
                 }
             )
         except UnicodeEncodeError as e:

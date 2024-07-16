@@ -59,7 +59,7 @@ GreenCity는 지역 데이터를 기반으로 도시림 네트워크를 조성�
 3. **명령어 실행**
     ```sh
     curl -X POST http://127.0.0.1:8000/generativeAI/image_generate/ \
-         -F "init_image=@파일위치 \
+         -F "init_image=@파일위치" \
          -F "text_prompts=Keep existing photos, Recognition of roads and buildings, Plant ginkgo trees on the sidewalk along the road" \
          -o generated_image.png
     ```
