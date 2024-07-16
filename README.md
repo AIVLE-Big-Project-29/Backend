@@ -22,7 +22,7 @@ GreenCity는 지역 데이터를 기반으로 도시림 네트워크를 조성�
    ```bash
    python manage.py runserver
 
-## User 설명
+## user 설명
 ### 유저 등록 절차
 1. **계정 정보 입력**
 2. **이메일 인증**
@@ -51,3 +51,16 @@ GreenCity는 지역 데이터를 기반으로 도시림 네트워크를 조성�
   - **게시물 부분 수정**: `/board/{id}/` - 특정 ID를 가진 게시물의 일부 필드를 수정합니다.
 - **DELETE**: 데이터를 삭제하는 요청입니다.
   - **게시물 삭제**: `/board/{id}/` - 특정 ID를 가진 게시물을 삭제합니다.
+
+## generativeAI 사용법
+
+1. **서버 실행**
+2. **명령어 창(윈도우면 Git Bash에) 실행**
+3. **명령어 실행**
+    ```sh
+    curl -X POST http://127.0.0.1:8000/generativeAI/image_generate/ \
+         -F "init_image=@파일위치 \
+         -F "text_prompts=Keep existing photos, Recognition of roads and buildings, Plant ginkgo trees on the sidewalk along the road" \
+         -o generated_image.png
+    ```
+4. **결과 확인**
