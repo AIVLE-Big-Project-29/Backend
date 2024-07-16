@@ -72,10 +72,10 @@ GreenCity는 지역 데이터를 기반으로 도시림 네트워크를 조성�
 
 ### 순서
 - #### 원격 저장소에서 파일 가져오는 법
-1. **git fetch**
-2. **git pull**
+  1. **git fetch**
+  2. **git pull**
 
 - #### 원격 저장소로 파일 올리는 법
-1. **git add '적용할 파일'**
-2. **git commit -m "커밋 메시지"**
-3. **git push origin <- 이 부분이 파일을 업로드 하는 부분** 
+  1. **git add '적용할 파일'**
+  2. **git commit -m "커밋 메시지"**
+  3. **git push origin <- 이 부분이 파일을 업로드 하는 부분** 
