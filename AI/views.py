@@ -3,13 +3,17 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import FileUploadSerializer
 import pandas as pd
-import pickle
-from rest_framework.permissions import IsAuthenticated
+import numpy as np
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.conf import settings
 import os
+import joblib
 
 class FileUploadView(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+    parser_classes = [MultiPartParser, FormParser]
     
     def post(self, request, *args, **kwargs):
         serializer = FileUploadSerializer(data=request.data)
@@ -29,31 +33,62 @@ def load_model_and_scaler(model_name, scaler_name):
     scaler_path = os.path.join(settings.MODEL_PATH, scaler_name)
     try:
         with open(model_path, 'rb') as model_file, open(scaler_path, 'rb') as scaler_file:
-            model = pickle.load(model_file)
-            scaler = pickle.load(scaler_file)
+            model = joblib.load(model_file)
+            scaler = joblib.load(scaler_file)
+            
         return model, scaler
     except Exception as e:
         print(f"Failed to load model and scaler: {e}")
         return None, None
     
-def run_model(model, scaler, dataframe):
-    scaled_data = scaler.transform(dataframe)
-    predictions = model.predict(scaled_data)
-    return predictions
+def run_model(model, scaler, dataframe, columns):
+    df = dataframe.loc[:, columns]
+    scaled_data = scaler.transform(df)
+    predictions = []
+    for test in scaled_data:
+        predictions.append(np.array([tree.predict([test]) for tree in model.estimators_]))
+
+    li_comp = []
+    # 0과 1의 개수 세기
+    for prediction in predictions:
+        num_ones = np.sum(prediction == 1)
+        li_comp.append(round(num_ones / len(model.estimators_) * 100, 2))
+    # predictions = model.predict(scaled_data)
+    return li_comp
 
 def run_all_models(dataframe):
-    models_info = [
-        {"name": "도시숲 적합성", "model_name": "compatibility_model.pkl", "scaler_name": "compatibility_scaler.pkl"},
-        {"name": "도시숲 필요성", "model_name": "necessity_model.pkl", "scaler_name": "necessity_scaler.pkl"},
-        # {"name": "생활숲", "model_name": "living_forest_model.pkl", "scaler_name": "living_forest_scaler.pkl"},
-        # {"name": "생태숲", "model_name": "ecological_forest_model.pkl", "scaler_name": "ecological_forest_scaler.pkl"},
-        # {"name": "환경숲", "model_name": "environmental_forest_model.pkl", "scaler_name": "environmental_forest_scaler.pkl"},
+    compatibility_columns = [
+        '면적', '전', '답', '과수원', '목장용지', '임야', '염전', '대', '공장용지', '학교용지',
+        '주차장', '주유소용지', '창고용지', '도로', '철도용지', '하천', '제방', '구거', '유지',
+        '양어장', '수도용지', '공원', '체육용지', '유원지', '종교용지', '사적지', '묘지', '잡종지',
+        '광천지', '공장 용지', '학교 용지', '주유소 용지', '창고 용지', '철도 용지', '수도 용지',
+        '체육 용지', '종교 용지', '세대수', '인구수', '인구수_남', '인구수_여', '한국인', '한국인_남',
+        '한국인_여', '외국인', '외국인_남', '외국인_여', '65세 이상 고령자', '소득'
     ]
+
+    necessity_columns = [
+        'BOD', 'COD', 'TOC', 'SS','DO',	'T-P', '총대장균군', '분원성대장균군', '암모니아성질소', '질산성질소',	
+        '용존총질소', '인산염인', '용존총인', '클로로필A', 'pH분류', '수온분류', '전도분류', 'PM-2.5', 'PM-10',
+        '오존', '일산화탄소', '일산화질소', '이산화황', '평균_기온', '최고_기온', '최저_기온', '강수총계', '평균 풍속', '최대 순간풍속'
+    ]
+
+    all_columns = list(dataframe.columns)
+    all_columns.remove('동')
+    locations = list(dataframe['동'])
     
+    models_info = [
+        {"name": "도시숲 적합성", "model_name": "compatibility_model.pkl", "scaler_name": "compatibility_scaler.pkl", "columns": compatibility_columns},
+        {"name": "도시숲 필요성", "model_name": "necessity_model.pkl", "scaler_name": "necessity_scaler.pkl", "columns": necessity_columns},
+        {"name": "생활숲", "model_name": "life_model.pkl", "scaler_name": "life_scaler.pkl", "columns": all_columns},
+    #     {"name": "생태숲", "model_name": "eco_model.pkl", "scaler_name": "eco_scaler.pkl", "columns": all_columns},
+        {"name": "환경숲", "model_name": "env_model.pkl", "scaler_name": "env_scaler.pkl", "columns": all_columns},
+    ]
+
     results = {}
     for info in models_info:
         model, scaler = load_model_and_scaler(info["model_name"], info["scaler_name"])
-        predictions = run_model(model, scaler, dataframe)
-        results[info["name"]] = predictions.tolist()
-    
+        predictions = run_model(model, scaler, dataframe, info['columns'])
+        results[info["name"]] = predictions
+        results["location"] = locations
+
     return results
