@@ -26,6 +26,9 @@ GreenCity는 지역 데이터를 기반으로 도시림 네트워크를 조성�
 ### 유저 등록 절차
 1. **계정 정보 입력**
 2. **이메일 인증**
+    ```sh
+    curl -X POST http://localhost:8000/user_api/verify-email/ -H "Content-Type: application/json" -d '{"email": "your_email@example.com"}'
+    ```
 3. **가입 요청**
 4. **가입 완료**
 
