@@ -25,7 +25,7 @@ class FileUploadView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 def process_file(file):
-    df = pd.read_excel(file)
+    df = pd.read_csv(file)
     return df
 
 def load_model_and_scaler(model_name, scaler_name):
