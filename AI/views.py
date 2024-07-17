@@ -77,18 +77,19 @@ def run_all_models(dataframe):
     locations = list(dataframe['동'])
     
     models_info = [
-        {"name": "도시숲 적합성", "model_name": "compatibility_model.pkl", "scaler_name": "compatibility_scaler.pkl", "columns": compatibility_columns},
-        {"name": "도시숲 필요성", "model_name": "necessity_model.pkl", "scaler_name": "necessity_scaler.pkl", "columns": necessity_columns},
-        {"name": "생활숲", "model_name": "life_model.pkl", "scaler_name": "life_scaler.pkl", "columns": all_columns},
+        {"name": "compatibility", "model_name": "compatibility_model.pkl", "scaler_name": "compatibility_scaler.pkl", "columns": compatibility_columns},
+        {"name": "necessity", "model_name": "necessity_model.pkl", "scaler_name": "necessity_scaler.pkl", "columns": necessity_columns},
+        {"name": "life", "model_name": "life_model.pkl", "scaler_name": "life_scaler.pkl", "columns": all_columns},
     #     {"name": "생태숲", "model_name": "eco_model.pkl", "scaler_name": "eco_scaler.pkl", "columns": all_columns},
-        {"name": "환경숲", "model_name": "env_model.pkl", "scaler_name": "env_scaler.pkl", "columns": all_columns},
+        {"name": "env", "model_name": "env_model.pkl", "scaler_name": "env_scaler.pkl", "columns": all_columns},
     ]
 
     results = {}
     for info in models_info:
         model, scaler = load_model_and_scaler(info["model_name"], info["scaler_name"])
         predictions = run_model(model, scaler, dataframe, info['columns'])
-        results[info["name"]] = predictions
         results["location"] = locations
+        results[info["name"]] = predictions
+        
 
     return results
