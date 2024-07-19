@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user_api/', include('user.urls')),
-    path('notices/', include('noticeboard.urls')),
+    path('notice/', include('noticeboard.urls')),
     path('AI/', include('AI.urls')),
     path('generativeAI/', include('generativeAI.urls'))
 ]

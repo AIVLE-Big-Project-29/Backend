@@ -8,5 +8,5 @@ class Board(models.Model):
     content = models.TextField()
     image_file = models.ImageField(upload_to='images/', blank=True, null=True)
     file = models.FileField(upload_to='files/')
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
+    created_at = models.DateField(auto_now_add = True)
+    updated_at = models.DateField(auto_now = True)
