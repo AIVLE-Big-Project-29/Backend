@@ -25,7 +25,12 @@ class FileUploadView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 def process_file(file):
-    df = pd.read_csv(file)
+    if file.endswith('.csv'):
+        df = pd.read_csv(file)
+    elif file.endswith('.xlsx') or file.endswith('.xls'):
+        df = pd.read_excel(file)
+    else:
+        raise ValueError("지원하지 않는 파일 형식입니다. CSV 또는 엑셀 파일을 제공하세요.")
     return df
 
 def load_model_and_scaler(model_name, scaler_name):
