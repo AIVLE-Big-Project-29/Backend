@@ -20,13 +20,33 @@ class FileUploadView(APIView):
         if serializer.is_valid():
             file = serializer.validated_data['file']
             dataframe = process_file(file)
-            result = run_all_models(dataframe)
-            return Response(result, status=status.HTTP_200_OK)
+            model_results = run_all_models(dataframe)
+            existing_results = load_existing_results()
+             # actual 값에 따라 데이터프레임 분리
+            existing_actual_0 = existing_results[existing_results['actual'] == 0]
+            existing_actual_1 = existing_results[existing_results['actual'] == 1]
+            return Response({
+                "model_results": model_results,
+                "existing_results_actual_0": existing_actual_0.to_dict(orient='records'),
+                "existing_results_actual_1": existing_actual_1.to_dict(orient='records')
+            }, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        
 def process_file(file):
-    df = pd.read_csv(file)
+    file_extension = os.path.splitext(file.name)[1].lower()
+    if file_extension == '.csv':
+        df = pd.read_csv(file)
+    elif file_extension in ['.xls', '.xlsx']:
+        df = pd.read_excel(file)
+    else:
+        raise ValueError("Unsupported file format")
     return df
+
+def load_existing_results():
+    # 서버에 저장된 기존 CSV 파일의 경로
+    existing_path = os.path.join(settings.BASE_DIR, 'result.csv')
+    existing_df = pd.read_csv(existing_path)
+    return existing_df
 
 def load_model_and_scaler(model_name, scaler_name):
     model_path = os.path.join(settings.MODEL_PATH, model_name)
@@ -61,9 +81,8 @@ def run_all_models(dataframe):
         '면적', '전', '답', '과수원', '목장용지', '임야', '염전', '대', '공장용지', '학교용지',
         '주차장', '주유소용지', '창고용지', '도로', '철도용지', '하천', '제방', '구거', '유지',
         '양어장', '수도용지', '공원', '체육용지', '유원지', '종교용지', '사적지', '묘지', '잡종지',
-        '광천지', '공장 용지', '학교 용지', '주유소 용지', '창고 용지', '철도 용지', '수도 용지',
-        '체육 용지', '종교 용지', '세대수', '인구수', '인구수_남', '인구수_여', '한국인', '한국인_남',
-        '한국인_여', '외국인', '외국인_남', '외국인_여', '65세 이상 고령자', '소득'
+        '광천지', '세대수', '인구수', '인구수_남', '인구수_여', '한국인', '한국인_남',
+        '한국인_여', '외국인', '외국인_남', '외국인_여', '65세 이상 고령자'
     ]
 
     necessity_columns = [
@@ -93,3 +112,4 @@ def run_all_models(dataframe):
         
 
     return results
+
