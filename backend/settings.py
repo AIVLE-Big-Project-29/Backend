@@ -255,6 +255,7 @@ FRONTEND_URL = 'http://localhost:8000'  # 프론트엔드 URL을 설정합니다
 
 # 모델 파일 경로 설정
 MODEL_PATH = os.path.join(BASE_DIR, 'AI', 'models')
+FILE_PATH = os.path.join(BASE_DIR, 'AI', 'file')
 
 # Stability API 키 설정
 STABILITY_API_KEY = os.getenv("STABILITY_API_KEY", config.get('STABILITY_API_KEY'))

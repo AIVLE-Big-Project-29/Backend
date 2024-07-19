@@ -9,6 +9,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ('username', 'password', 'email')
         extra_kwargs = {'password': {'write_only': True}}
 
+    def validate_username(self, value):
+        if CustomUser.objects.filter(username=value).exists():
+            raise serializers.ValidationError("This username is already taken.")
+        return value
+    
     def create(self, validated_data):
         email = validated_data['email']
         try:
