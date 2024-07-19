@@ -33,9 +33,11 @@ class FileUploadView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 def process_file(file):
-    if file.endswith('.csv'):
+    # 파일 확장자 확인
+    file_name = file.name
+    if file_name.endswith('.csv'):
         df = pd.read_csv(file)
-    elif file.endswith('.xlsx') or file.endswith('.xls'):
+    elif file_name.endswith('.xlsx') or file_name.endswith('.xls'):
         df = pd.read_excel(file)
     else:
         raise ValueError("지원하지 않는 파일 형식입니다. CSV 또는 엑셀 파일을 제공하세요.")
@@ -43,7 +45,7 @@ def process_file(file):
 
 def load_existing_results():
     # 서버에 저장된 기존 CSV 파일의 경로
-    existing_path = os.path.join(settings.BASE_DIR, 'result.csv')
+    existing_path = os.path.join(settings.FILE_PATH, 'result.csv')
     existing_df = pd.read_csv(existing_path)
     return existing_df
 
