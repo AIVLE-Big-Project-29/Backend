@@ -25,7 +25,8 @@ urlpatterns = [
     path('user_api/', include('user.urls')),
     path('notice/', include('noticeboard.urls')),
     path('AI/', include('AI.urls')),
-    path('generativeAI/', include('generativeAI.urls'))
+    path('generativeAI/', include('generativeAI.urls')),
+    path('location/', include('location.urls')),
 ]
 
 # MEDIA 파일 서빙

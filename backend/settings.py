@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'noticeboard',
     'AI',
     'generativeAI',
+    'location',
 
     # CORS
     'corsheaders',
