@@ -6,27 +6,59 @@ from .models import Location
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import StateProvinceSerializer, CityCountySerializer, TownVillageSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 class StateProvinceView(APIView):
-    def get(self, request):
-        state_provinces = Location.objects.values('state_province').distinct()
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        state_provinces = Location.objects.values('state_province').distinct().exclude(state_province="nan")
         serializer = StateProvinceSerializer(state_provinces, many=True)
         return Response(serializer.data)
 
 class CityCountyView(APIView):
-    def get(self, request):
-        state_province = request.GET.get('state_province')
-        city_counties = Location.objects.filter(state_province=state_province).values('city_county', 'latitude', 'longitude').distinct()
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        state_province = request.POST.get('state_province')
+        if not state_province or state_province == "nan":
+            return Response({"error": "유효한 state_province 파라미터가 필요합니다."}, status=400)
+
+        city_counties = Location.objects.filter(
+            state_province=state_province
+        ).exclude(
+            city_county__isnull=True
+        ).exclude(
+            city_county="nan"
+        ).exclude(
+            city_county=state_province
+        ).values('city_county').distinct()
+        
         serializer = CityCountySerializer(city_counties, many=True)
         return Response(serializer.data)
 
 class TownVillageView(APIView):
-    def get(self, request):
-        state_province = request.GET.get('state_province')
-        city_county = request.GET.get('city_county')
-        town_villages = Location.objects.filter(state_province=state_province, city_county=city_county).values('town_village', 'latitude', 'longitude').distinct()
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        state_province = request.POST.get('state_province')
+        city_county = request.POST.get('city_county')
+        if not state_province or state_province == "nan" or not city_county or city_county == "nan":
+            return Response({"error": "유효한 state_province 및 city_county 파라미터가 필요합니다."}, status=400)
+
+        town_villages = Location.objects.filter(
+            state_province=state_province,
+            city_county=city_county
+        ).exclude(
+            town_village__isnull=True
+        ).exclude(
+            town_village="nan"
+        ).values('town_village', 'latitude', 'longitude').distinct()
+        
         serializer = TownVillageSerializer(town_villages, many=True)
         return Response(serializer.data)
+
+
 
 
 # db 업데이트
