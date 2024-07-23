@@ -77,6 +77,13 @@ GreenCity는 지역 데이터를 기반으로 도시림 네트워크를 조성�
     ```
 4. **결과 확인**
 
+## location 사용법
+- **POST로 요청을 보내야하고 반환 값은 JSON 형식**
+1. **curl -X POST http://localhost:8000/location/state_provinces/**
+2. **curl -X POST http://localhost:8000/location/city_counties/ -H "Content-Type: application/json" -d '{"state_province": "부산광역시"}'**
+3. **curl -X POST http://localhost:8000/location/town_villages/ -H "Content-Type: application/json" -d '{"state_province": "부산광역시", "city_county": "해운대구"}'**
+
+
 
 ## 백엔드 당부할것
 ### 1. 원격 저장소에 Push 하기전에 fetch하기 
