@@ -26,15 +26,15 @@ from rest_framework.permissions import AllowAny ,IsAuthenticated
 class BoardListAPIView(ListAPIView):
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
-    # permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+    # permission_classes = [AllowAny]
 
 
 class BoardCreateAPIView(CreateAPIView):
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
-    # permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+    # permission_classes = [AllowAny]
 # user=self.request.user
     def perform_create(self, serializer):
         serializer.save()
@@ -42,8 +42,8 @@ class BoardCreateAPIView(CreateAPIView):
 class BoardRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
-    # permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+    # permission_classes = [AllowAny]
 
     def perform_update(self, serializer):
         serializer.save()

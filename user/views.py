@@ -80,7 +80,7 @@ def verify_email(request, token):
 
 # 비밀번호 재설정 요청
 class PasswordResetRequestView(generics.GenericAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
@@ -108,7 +108,7 @@ class PasswordResetRequestView(generics.GenericAPIView):
 
 # 비밀번호 재설정
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def reset_password(request, token):
     try:
         password_reset_request = PasswordResetRequest.objects.get(token=token)

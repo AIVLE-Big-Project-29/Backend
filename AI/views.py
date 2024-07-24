@@ -11,8 +11,8 @@ import os
 import joblib
 
 class FileUploadView(APIView):
-    # permission_classes = [IsAuthenticated]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    # permission_classes = [AllowAny]
     parser_classes = [MultiPartParser, FormParser]
     
     def post(self, request, *args, **kwargs):

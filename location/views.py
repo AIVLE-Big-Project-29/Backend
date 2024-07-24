@@ -9,7 +9,8 @@ from .serializers import StateProvinceSerializer, CityCountySerializer, TownVill
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 class StateProvinceView(APIView):
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     
     def post(self, request):
         state_provinces = Location.objects.values('state_province').distinct().exclude(state_province="nan")
@@ -17,7 +18,8 @@ class StateProvinceView(APIView):
         return Response(serializer.data)
 
 class CityCountyView(APIView):
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     
     def post(self, request):
         state_province = request.POST.get('state_province')
@@ -38,7 +40,8 @@ class CityCountyView(APIView):
         return Response(serializer.data)
 
 class TownVillageView(APIView):
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     
     def post(self, request):
         state_province = request.POST.get('state_province')
