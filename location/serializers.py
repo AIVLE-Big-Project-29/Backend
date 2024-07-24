@@ -7,7 +7,7 @@ class StateProvinceSerializer(serializers.Serializer):
 class CityCountySerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ['city_county']
+        fields = ['city_country']
 
 class TownVillageSerializer(serializers.ModelSerializer):
     class Meta:
