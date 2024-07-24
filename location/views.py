@@ -27,12 +27,12 @@ class CityCountyView(APIView):
         city_counties = Location.objects.filter(
             state_province=state_province
         ).exclude(
-            city_county__isnull=True
+            city_country__isnull=True
         ).exclude(
-            city_county="nan"
+            city_country="nan"
         ).exclude(
-            city_county=state_province
-        ).values('city_county').distinct()
+            city_country=state_province
+        ).values('city_country').distinct()
         
         serializer = CityCountySerializer(city_counties, many=True)
         return Response(serializer.data)
@@ -42,13 +42,13 @@ class TownVillageView(APIView):
     
     def post(self, request):
         state_province = request.POST.get('state_province')
-        city_county = request.POST.get('city_county')
-        if not state_province or state_province == "nan" or not city_county or city_county == "nan":
-            return Response({"error": "유효한 state_province 및 city_county 파라미터가 필요합니다."}, status=400)
+        city_country = request.POST.get('city_country')
+        if not state_province or state_province == "nan" or not city_country or city_country == "nan":
+            return Response({"error": "유효한 state_province 및 city_country 파라미터가 필요합니다."}, status=400)
 
         town_villages = Location.objects.filter(
             state_province=state_province,
-            city_county=city_county
+            city_country=city_country
         ).exclude(
             town_village__isnull=True
         ).exclude(
