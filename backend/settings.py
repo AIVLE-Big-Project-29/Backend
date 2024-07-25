@@ -248,7 +248,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config.get('EMAIL_HOST_PASSWORD')
 
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = 'no-reply@GreenCity.com'
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 FRONTEND_URL = 'http://localhost:8000'  # 프론트엔드 URL을 설정합니다.
 
 # # BASE_DIR은 프로젝트의 기본 디렉토리를 가리킵니다.
