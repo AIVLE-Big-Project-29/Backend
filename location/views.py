@@ -65,8 +65,8 @@ class TownVillageView(APIView):
 
 
 # db 업데이트
-def import_excel():
-    excel_file = ''
+def import_excel(excel_file):
+    #excel_file = ''
     df = pd.read_excel(excel_file)
 
     try:
